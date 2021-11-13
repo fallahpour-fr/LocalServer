@@ -17,14 +17,17 @@ app.post("/signin/users", (request, response) => {
       users[i].password === request.body.password
     ) {
       response.send({
-        status: "you signed up, welcome to home page",
+        status: "you signed up befor, welcome to home page",
         data: request.body,
+        enter: "Ok",
       });
     }
   }
 
-  response.send({
-    status: "you did not sign up bedor pls go to regestered page ",
+  response.status(400).send({
+    status: "you did not sign up before pls go to regestered page ",
+    data: request.body,
+    params: request.query,
   });
 });
 
@@ -35,15 +38,17 @@ app.post("/signup/users", (request, response) => {
         users[i].username === request.body.username &&
         users[i].password === request.body.password
       ) {
-        response.send({
-          status: "you have regestered befor , show error moudal",
+        response.status(400).send({
+          status: "you did not sign up bedor pls go to regestered page ",
           data: request.body,
+          params: request.query,
         });
       } else {
         users.push(request.body);
         response.send({
-          status: "you sign up,go to home page",
+          status: "you sign up,welcom to home page",
           data: request.body,
+          enter: "ok",
         });
       }
     }
@@ -52,10 +57,25 @@ app.post("/signup/users", (request, response) => {
     response.send({
       status: "you sign up,go to home page",
       data: request.body,
+      enter: "ok",
     });
   }
   console.log(users);
 });
+
+// app.get("/signin/users", (request, response) => {
+//   console.log(request.body);
+//   // response.send({
+//   //     status:'nothing',
+//   //     data:request.body,
+//   //     params:request.query
+//   // })
+//   response.status(400).send({
+//     status: "nothing",
+//     data: request.body,
+//     params: request.query,
+//   });
+// });
 
 // app.get('/signup/users/' , (request,response)=>{
 //     console.log(request.body)
