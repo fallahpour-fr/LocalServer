@@ -11,28 +11,27 @@ app.use(express.json({ limit: "1mb" }));
 let users = [];
 
 app.post("/signin/users", (request, response) => {
-  console.log(request.body);
-
   for (let i = 0; i < users.length; i++) {
     if (
-      users[i].username === request.body.username &&
+      users[i].Username === request.body.username &&
       users[i].password === request.body.password
     ) {
       response.send({
-        status: "you signed up",
+        status: "you signed up, welcome to home page",
         data: request.body,
       });
     }
   }
 
-  response.send("you didnt sign up");
+  response.send({
+    status: "you did not sign up bedor pls go to regestered page ",
+  });
 });
 
-app.post("/signup/users/", (request, response) => {
-  //   console.log(request.body);
+app.post("/signup/users", (request, response) => {
   if (users.length !== 0) {
     for (let i = 0; i < users.length; i++) {
-     if (
+      if (
         users[i].username === request.body.username &&
         users[i].password === request.body.password
       ) {
@@ -40,20 +39,20 @@ app.post("/signup/users/", (request, response) => {
           status: "you have regestered befor , show error moudal",
           data: request.body,
         });
-      }else{
-        users.push(request.body)
+      } else {
+        users.push(request.body);
         response.send({
           status: "you sign up,go to home page",
           data: request.body,
         });
       }
     }
-  }else{
-      users.push(request.body)
-      response.send({
-        status: "you sign up,go to home page",
-        data: request.body,
-      });
+  } else {
+    users.push(request.body);
+    response.send({
+      status: "you sign up,go to home page",
+      data: request.body,
+    });
   }
   console.log(users);
 });
