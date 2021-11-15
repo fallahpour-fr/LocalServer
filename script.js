@@ -15,22 +15,21 @@ app.post("/signin/users", (request, response) => {
       users[i].username === request.body.username &&
       users[i].password === request.body.password
     ) {
-      response.send([{
+      response.send({
         status: "you signed up befor, welcome to home page",
         data: request.body,
         enter: "Ok",
-        usersData:users[i],
-      }]);
+        usersData:users,
+      });
       return;
     }
   }
 
-  response.status(400).send([{
+  response.status(400).send({
     status: "you did not sign up before pls go to regestered page ",
     data: request.body,
     params: request.query,
-    usersData:users[i],
-  }]);
+  });
 });
 
 app.post("/signup/users", (request, response) => {
@@ -40,10 +39,9 @@ app.post("/signup/users", (request, response) => {
         users[i].password === request.body.password
       ) {
         response.status(400).send([{
-          status: "you did not sign up before pls go to regestered page ",
+          status: "you signed up before , pls go to sign in page ",
           data: request.body,
           params: request.query,
-          usersData:users[i],
         }]);
         return;
       }
@@ -54,7 +52,6 @@ app.post("/signup/users", (request, response) => {
       status: "you sign up,welcom to home page",
       data: request.body,
       enter: "ok",
-      usersData:users[i],
     }]);
   console.log(users);
 });
