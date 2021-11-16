@@ -16,43 +16,37 @@ app.post("/signin/users", (request, response) => {
       users[i].password === request.body.password
     ) {
       response.send({
-        status: "you signed up befor, welcome to home page",
+        status: "you signed up before, welcome to home page",
         data: request.body,
         enter: "Ok",
-        usersData:users,
+        usersData: users,
       });
       return;
     }
   }
 
-  response.status(400).send({
-    status: "you did not sign up before pls go to regestered page ",
-    data: request.body,
-    params: request.query,
-  });
+  response
+    .status(400)
+    .send("you did not sign up before pls go to regestered page ");
 });
 
 app.post("/signup/users", (request, response) => {
-    for (let i = 0; i < users.length; i++) {
-      if (
-        users[i].username === request.body.username &&
-        users[i].password === request.body.password
-      ) {
-        response.status(400).send([{
-          status: "you signed up before , pls go to sign in page ",
-          data: request.body,
-          params: request.query,
-        }]);
-        return;
-      }
+  for (let i = 0; i < users.length; i++) {
+    if (
+      users[i].username === request.body.username &&
+      users[i].password === request.body.password
+    ) {
+      response.status(400).send("you signed up before , pls go to sign in page ");
+      return;
     }
+  }
 
-    users.push(request.body);
-    response.send([{
-      status: "you sign up,welcom to home page",
-      data: request.body,
-      enter: "ok",
-    }]);
+  users.push(request.body);
+  response.send({
+    status: "you sign up,welcom to home page",
+    data: request.body,
+    enter: "ok",
+  });
   console.log(users);
 });
 
