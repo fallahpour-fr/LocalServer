@@ -1,10 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const {
-  request,
-  response
-} = require("express");
+const { request, response } = require("express");
 
 app.listen(3030, () => console.log("listening to 3030"));
 
@@ -30,7 +27,7 @@ app.post("/signin/users", (request, response) => {
         data: request.body.values,
         enter: "Ok",
         usersData: users,
-        token:  "580e486e9bb666b9ea4a6",
+        token: "580e486e9bb666b9ea4a6",
       });
       return;
     }
@@ -48,7 +45,6 @@ app.post("/signin/users", (request, response) => {
   response
     .status(400)
     .send("you did not sign up before pls go to regestered page ");
-
 });
 
 app.post("/signup/users", (request, response) => {
@@ -79,18 +75,18 @@ app.get("/users/profile", (request, response) => {
 
   let token = request.headers.authorization;
   if (token !== "580e486e9bb666b9ea4a6") {
-    console.log('token :', token)
-    response.status(401).json('Can not Found user , please go to login page .')
+    console.log("token :", token);
+    response.status(401).json("Can not Found user , please go to login page .");
     return;
   }
   response.send({
     message: "users was successful",
 
     user: {
-      name: "Farzaneh Fallahpur",
+      name: "Farzaneh Fallahpour",
       email: "farzanehhh@gmail.com",
       id: 3030,
-      posts: posts
+      posts: posts,
     },
   });
 });
@@ -98,39 +94,72 @@ app.get("/users/profile", (request, response) => {
 app.post("/createpost", (request, response) => {
   // console.log(request.body.values);
 
-  posts.push(request.body.values)
+  posts.push(request.body.values);
 
   response.send({
-    message: 'data save successful !'
-  })
-
+    message: "data save successful !",
+  });
 });
 
-app.post('/post', (request, response) => {
-  // console.log(request.body.id)
-  // console.log(posts)
-  let id = request.body.id
+app.post("/post", (request, response) => {
+  // console.log(request.body.id);
+  // console.log(posts);
+  let id = request.body.id;
 
   let post = posts.filter((item) => {
-    item.id !== id
-  })
-  // console.log(post)
+    item.id !== id;
+  });
+  console.log(post);
 
   response.send({
-    posts: posts
-  })
-})
+    posts: posts,
+  });
+});
 
-app.post('/postdata', (request, response) => {
-  console.log(request.body.Id)
-  let Id = request.body.Id
+app.post("/postdata", (request, response) => {
+  // console.log(request.body.Id);
+  let Id = request.body.Id;
   for (let i = 0; i < posts.length; i++) {
     if (posts[i].id === Number(Id)) {
       response.send({
-        post: posts[i]
-      })
+        post: posts[i],
+      });
     }
     return;
   }
-  response.status(404).json('Post is not exist')
-})
+  response.status(404).json("Post is not exist");
+});
+
+app.post("/profileData", (request, response) => {
+  let id = request.body.id;
+  // console.log(id);
+
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].id === Number(id)) {
+      response.send({
+        user: users[i],
+      });
+    }
+    return;
+  }
+
+  response.status(404).json('User does not found')
+});
+
+app.post('/profileEdited' , (request , response)=>{
+  let id = request.body.id;
+  // console.log(id);
+  let value=request.body.values
+  console.log(value)
+
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].id === Number(id)) {
+      users[i].age=value.age
+      users[i].website=value.website
+      users[i].introduction=value.introduction
+    }
+  }
+
+  console.log(users)
+
+} )
