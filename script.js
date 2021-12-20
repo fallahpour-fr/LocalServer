@@ -1,10 +1,26 @@
 const express = require("express");
+const fileUpload = require("express-fileupload");
+const multer = require("multer");
+const ejs = require("ejs");
+const path = require("path");
 const app = express();
 const cors = require("cors");
+const FormData = require('form-data');
 const { request, response } = require("express");
+const bodyParser = require('body-parser')
+var upload = multer();
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+
+//EJS
+app.set("view engine", "ejs");
+
+app.use(express.static("./public"));
 
 app.listen(3030, () => console.log("listening to 3030"));
-
+app.use(fileUpload());
 app.use(cors());
 // app.use(express.static("public"));
 app.use(
@@ -12,8 +28,51 @@ app.use(
     limit: "1mb",
   })
 );
+
+
+app.use(express.json()); 
+
+app.use(express.urlencoded({ extended: true }));
+app.use(upload.array()); 
+app.use(express.static('public'));
+
+
 let users = [];
 let posts = [];
+
+// const storage = multer.diskStorage({
+//   destination: "./public/upload",
+//   filename: function (req, file, cb) {
+//     cb(
+//       null,
+//       file.filename + "-" + Date.now() + path.extname(file.originalname)
+//     );
+//   },
+// });
+
+// const upload = multer({
+//   storage: storage,
+// }).single("myImage");
+
+app.post("/upload", (request, response) => {
+  // upload(request, response, (err) => {
+  //   console.log(request.file)
+  // });
+
+  // if (req.files === null) {
+  //   return res.status(400).json("No file uploaded");
+  // }
+  console.log(request.body);
+  // const file = request.files.file;
+
+  // file.mv(`${__dirname}/client/public/uploads/${file.name}`, (err) => {
+  //   if (err) {
+  //     return  response.status(500).send(err);
+  //   }
+
+  //    response.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+  // });
+});
 
 app.post("/signin/users", (request, response) => {
   console.log(request.body.values);
@@ -143,23 +202,22 @@ app.post("/profileData", (request, response) => {
     return;
   }
 
-  response.status(404).json('User does not found')
+  response.status(404).json("User does not found");
 });
 
-app.post('/profileEdited' , (request , response)=>{
+app.post("/profileEdited", (request, response) => {
   let id = request.body.id;
   // console.log(id);
-  let value=request.body.values
-  console.log(value)
+  let value = request.body.values;
+  console.log(value);
 
   for (let i = 0; i < users.length; i++) {
     if (users[i].id === Number(id)) {
-      users[i].age=value.age
-      users[i].website=value.website
-      users[i].introduction=value.introduction
+      users[i].age = value.age;
+      users[i].website = value.website;
+      users[i].introduction = value.introduction;
     }
   }
 
-  console.log(users)
-
-} )
+  console.log(users);
+});
