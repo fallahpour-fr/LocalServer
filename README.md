@@ -29,7 +29,8 @@ This simple server will allow you to create your HTTP front-end architecture wit
 
 ## Features
  * Use CORS 
- * Write algorithm and use api for sending data 
+ * Write algorithm and use api for sending data .
+ * Use this server in my weblog project that link is [here](https://github.com/fallahpour-fr/Weblog)
 
 
  ## Requirements
