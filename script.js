@@ -176,15 +176,17 @@ app.post("/post", (request, response) => {
 });
 
 app.post("/postdata", (request, response) => {
-  // console.log(request.body.Id);
+  console.log(request.body.Id);
   let Id = request.body.Id;
   for (let i = 0; i < posts.length; i++) {
+    console.log(posts[i].id)
     if (posts[i].id === Number(Id)) {
+      console.log(posts[i])
       response.send({
         post: posts[i],
       });
+      return;
     }
-    return;
   }
   response.status(404).json("Post is not exist");
 });
