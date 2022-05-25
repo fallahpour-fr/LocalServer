@@ -22,7 +22,6 @@ app.use(express.static("./public"));
 app.listen(3030, () => console.log("listening to 3030"));
 app.use(fileUpload());
 app.use(cors());
-// app.use(express.static("public"));
 app.use(
   express.json({
     limit: "1mb",
@@ -40,42 +39,27 @@ app.use(express.static('public'));
 let users = [];
 let posts = [];
 
-// const storage = multer.diskStorage({
-//   destination: "./public/upload",
-//   filename: function (req, file, cb) {
-//     cb(
-//       null,
-//       file.filename + "-" + Date.now() + path.extname(file.originalname)
-//     );
-//   },
-// });
-
-// const upload = multer({
-//   storage: storage,
-// }).single("myImage");
-
 app.post("/upload", (request, response) => {
-  // upload(request, response, (err) => {
-  //   console.log(request.file)
-  // });
+  upload(request, response, (err) => {
+    console.log(request.file)
+  });
 
-  // if (req.files === null) {
-  //   return res.status(400).json("No file uploaded");
-  // }
-  console.log(request.body);
-  // const file = request.files.file;
+  if (req.files === null) {
+    return res.status(400).json("No file uploaded");
+  }
+ 
+  const file = request.files.file;
 
-  // file.mv(`${__dirname}/client/public/uploads/${file.name}`, (err) => {
-  //   if (err) {
-  //     return  response.status(500).send(err);
-  //   }
+  file.mv(`${__dirname}/client/public/uploads/${file.name}`, (err) => {
+    if (err) {
+      return  response.status(500).send(err);
+    }
 
-  //    response.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
-  // });
+     response.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+  });
 });
 
 app.post("/signin/users", (request, response) => {
-  console.log(request.body.values);
   for (let i = 0; i < users.length; i++) {
     if (
       users[i].username === request.body.values.username &&
@@ -91,16 +75,7 @@ app.post("/signin/users", (request, response) => {
       return;
     }
   }
-  // response.send({
-  //   status: "you signed up before, welcome to home page",
-  //   enter: "Ok",
-  //   user: {
-  //     name: "Farzaneh Fallahpur",
-  //     email: "farzanehhh@gmail.com",
-  //     id: 3030,
-  //   },
-  //   token: '580e486e9bb666b9ea4a6',
-  // });
+
   response
     .status(400)
     .send("you did not sign up before pls go to regestered page ");
@@ -126,15 +101,12 @@ app.post("/signup/users", (request, response) => {
     enter: "ok",
     token: "580e486e9bb666b9ea4a6",
   });
-  console.log(users);
 });
 
 app.get("/users/profile", (request, response) => {
-  // console.log(request.headers);
 
   let token = request.headers.authorization;
   if (token !== "580e486e9bb666b9ea4a6") {
-    console.log("token :", token);
     response.status(401).json("Can not Found user , please go to login page .");
     return;
   }
@@ -151,8 +123,7 @@ app.get("/users/profile", (request, response) => {
 });
 
 app.post("/createpost", (request, response) => {
-  // console.log(request.body.values);
-
+ 
   posts.push(request.body.values);
 
   response.send({
@@ -161,27 +132,21 @@ app.post("/createpost", (request, response) => {
 });
 
 app.post("/post", (request, response) => {
-  // console.log(request.body.id);
-  // console.log(posts);
   let id = request.body.id;
 
   let post = posts.filter((item) => {
     item.id !== id;
   });
-  console.log(post);
 
   response.send({
-    posts: posts,
+    posts: post,
   });
 });
 
 app.post("/postdata", (request, response) => {
-  console.log(request.body.Id);
   let Id = request.body.Id;
   for (let i = 0; i < posts.length; i++) {
-    console.log(posts[i].id)
     if (posts[i].id === Number(Id)) {
-      console.log(posts[i])
       response.send({
         post: posts[i],
       });
@@ -193,7 +158,6 @@ app.post("/postdata", (request, response) => {
 
 app.post("/profileData", (request, response) => {
   let id = request.body.id;
-  // console.log(id);
 
   for (let i = 0; i < users.length; i++) {
     if (users[i].id === Number(id)) {
@@ -209,9 +173,7 @@ app.post("/profileData", (request, response) => {
 
 app.post("/profileEdited", (request, response) => {
   let id = request.body.id;
-  // console.log(id);
   let value = request.body.values;
-  console.log(value);
 
   for (let i = 0; i < users.length; i++) {
     if (users[i].id === Number(id)) {
@@ -220,6 +182,4 @@ app.post("/profileEdited", (request, response) => {
       users[i].introduction = value.introduction;
     }
   }
-
-  console.log(users);
 });
